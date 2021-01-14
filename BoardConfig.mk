@@ -12,9 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Inherit from scx30g2 common configs
--include device/samsung/scx30g2-common/BoardConfigCommon.mk
-
 # Inherit from the proprietary version
 -include vendor/samsung/j23g/BoardConfigVendor.mk
 
@@ -52,7 +49,12 @@ BOARD_HAVE_SAMSUNG_WIFI := true
 # Bluetooth
 USE_BLUETOOTH_BCM4343 := true
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/samsung/j23g/bluetooth
-BOARD_CUSTOM_BT_CONFIG := device/samsung/scx35-common/bluetooth/libbt_vndcfg.txt
+BOARD_CUSTOM_BT_CONFIG := device/samsung/j23g/bluetooth/libbt_vndcfg.txt
+
+# Graphics
+TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
+TARGET_FORCE_SCREENSHOT_CPU_PATH := true
+NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
 
 # Kernel
 TARGET_KERNEL_CONFIG := j23g-dt_defconfig
@@ -61,6 +63,23 @@ TARGET_KERNEL_SOURCE := kernel/samsung/j23g
 # Resolution
 TARGET_SCREEN_HEIGHT := 960
 TARGET_SCREEN_WIDTH := 540
+
+# System properties
+TARGET_SYSTEM_PROP += device/samsung/j23g/system.prop
+
+# Recovery
+TARGET_RECOVERY_FSTAB := device/samsung/j23g/rootdir/fstab.sc8830
+
+# RIL
+BOARD_RIL_CLASS += ../../../device/samsung/j23g/ril
+
+# Hardware-specific
+SOC_SCX30G_V2 := true
+
+# CMHW
+BOARD_HARDWARE_CLASS := \
+	device/samsung/j23g/cmhw
+TARGET_TAP_TO_WAKE_NODE := "/sys/android_touch/doubletap2wake"
 
 # Assert
 TARGET_OTA_ASSERT_DEVICE := SM-J200H,j23g,j23gdd

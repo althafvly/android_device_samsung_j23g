@@ -17,8 +17,43 @@ LOCAL_PATH := device/samsung/j23g
 # Inherit from vendor tree
 $(call inherit-product-if-exists, vendor/samsung/j23g/j23g-vendor.mk)
 
-# Inherit from scx30g2-common device configuration
-$(call inherit-product, device/samsung/scx30g2-common/common.mk)
+DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
+
+# Bluetooth
+PRODUCT_PACKAGES += \
+	bt_vendor.conf
+
+# GPS
+PRODUCT_PACKAGES += \
+	libgpspc \
+	libefuse \
+	gps.conf \
+	gps.xml
+
+# WiFi
+PRODUCT_PACKAGES += \
+	wpa_supplicant_overlay.conf \
+	p2p_supplicant_overlay.conf \
+	nvram_net.txt
+
+# Rootdir
+PRODUCT_PACKAGES += \
+	fstab.sc8830 \
+	init.sc8830.rc \
+	init.sc8830.usb.rc \
+	ueventd.sc8830.rc
+
+# RIL
+PRODUCT_PACKAGES += \
+	rild.rc
+
+# Interactive governor configs
+PRODUCT_PACKAGES += \
+	interactive_gov.rc
+
+# Media
+PRODUCT_PACKAGES += \
+	media_codecs.xml
 
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
