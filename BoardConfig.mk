@@ -87,3 +87,28 @@ BLOCK_BASED_OTA := false
 
 # RIL
 TARGET_SPECIFIC_HEADER_PATH := device/samsung/j23g/include
+
+# SPRD hardware
+BOARD_USES_SPRD_HARDWARE := true
+
+# Let the world know we are building for a spreadtrum device
+TARGET_BOARD_SOC_VENDOR := sprd
+
+# Graphics
+USE_OPENGL_RENDERER := true
+
+# RIL
+BOARD_PROVIDES_RILD := true
+BOARD_PROVIDES_LIBRIL := true
+BOARD_PROVIDES_LIBREFERENCE_RIL := true
+BOARD_RIL_CLASS := ../../../device/samsung/j23g/ril
+
+# Bluetooth
+BOARD_HAVE_BLUETOOTH := true
+BOARD_HAVE_BLUETOOTH_BCM := true
+
+# Audio
+BOARD_USES_TINYALSA_AUDIO := true
+
+# CMHW
+BOARD_HARDWARE_CLASS := device/samsung/j23g/cmhw/
