@@ -17,32 +17,51 @@ LOCAL_PATH := device/samsung/j23g
 # Inherit from vendor tree
 $(call inherit-product-if-exists, vendor/samsung/j23g/j23g-vendor.mk)
 
-DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
+# The gps config appropriate for this device
+$(call inherit-product, device/common/gps/gps_us_supl.mk)
 
-$(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
+DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
 # Audio
 PRODUCT_PACKAGES += \
+	audio_hw.xml \
+	audio_para \
+	audio_effects_vendor.conf \
+	audio_policy.conf \
+	codec_pga.xml \
+	tiny_hw.xml \
+	audio.primary.sc8830 \
+	libaudio-resampler \
+	libatchannel_wrapper \
 	audio.a2dp.default \
 	audio.usb.default \
 	audio.r_submix.default \
 	libtinyalsa
 
-# WiFi
+# Bluetooth
 PRODUCT_PACKAGES += \
-	dhcpcd.conf \
-	wpa_supplicant \
-	wpa_supplicant.conf \
-	hostapd
+	libbluetooth_jni \
+	bluetooth.default \
+	bt_vendor.conf
 
-# Device props
-PRODUCT_PROPERTY_OVERRIDES := \
-	keyguard.no_require_sim=true \
-	ro.com.android.dataroaming=false
+# Codecs
+PRODUCT_PACKAGES += \
+	libcolorformat_switcher \
+	libstagefrighthw \
+	libstagefright_sprd_mpeg4dec \
+	libstagefright_sprd_mpeg4enc \
+	libstagefright_sprd_h264dec \
+	libstagefright_sprd_h264enc \
+	libstagefright_sprd_vpxdec \
+	libstagefright_sprd_aacdec \
+	libstagefright_sprd_mp3dec
 
 # Compat
 PRODUCT_PACKAGES += \
-    	libstlport
+	libstlport \
+	librilutils \
+	libril_shim \
+	libgps_shim
 
 # Set default USB interface
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
@@ -72,6 +91,28 @@ PERMISSION_XML_FILES := \
 PRODUCT_COPY_FILES += \
 	$(foreach f,$(PERMISSION_XML_FILES),$(f):system/etc/permissions/$(notdir $(f)))
 
+# Media config
+MEDIA_XML_CONFIGS := \
+	frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml \
+	frameworks/av/media/libstagefright/data/media_codecs_google_video_le.xml \
+	frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml
+
+PRODUCT_COPY_FILES += \
+	$(foreach f,$(MEDIA_XML_CONFIGS),$(f):system/etc/$(notdir $(f)))
+
+# Permissions
+PERMISSIONS_XML_FILES := \
+	frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml \
+	frameworks/native/data/etc/android.hardware.camera.front.xml \
+	frameworks/native/data/etc/android.hardware.camera.xml \
+	frameworks/native/data/etc/android.hardware.sensor.proximity.xml \
+	frameworks/native/data/etc/android.hardware.sensor.light.xml \
+	frameworks/native/data/etc/android.software.midi.xml \
+	packages/wallpapers/LivePicker/android.software.live_wallpaper.xml
+
+PRODUCT_COPY_FILES += \
+	$(foreach f,$(PERMISSIONS_XML_FILES),$(f):system/etc/permissions/$(notdir $(f)))
+
 # Filesystem management tools
 PRODUCT_PACKAGES += \
 	f2fstat \
@@ -86,11 +127,14 @@ PRODUCT_PACKAGES += \
     
 # Samsung Service Mode
 PRODUCT_PACKAGES += \
-	SamsungServiceMode
+	SamsungServiceMode \
+	SamsungDoze \
+	Snap \
+	Gello
 
-# Bluetooth
+# FM radio
 PRODUCT_PACKAGES += \
-	bt_vendor.conf
+	fm.sc8830
 
 # GPS
 PRODUCT_PACKAGES += \
@@ -99,18 +143,54 @@ PRODUCT_PACKAGES += \
 	gps.conf \
 	gps.xml
 
-# WiFi
+# Lights
 PRODUCT_PACKAGES += \
-	wpa_supplicant_overlay.conf \
-	p2p_supplicant_overlay.conf \
-	nvram_net.txt
+	lights.sc8830
+
+# PowerHAL
+PRODUCT_PACKAGES += \
+	power.sc8830
+
+# HWC
+PRODUCT_PACKAGES += \
+	libHWCUtils \
+	gralloc.sc8830 \
+	hwcomposer.sc8830 \
+	sprd_gsp.sc8830 \
+	libmemoryheapion \
+	libion_sprd
 
 # Rootdir
 PRODUCT_PACKAGES += \
 	fstab.sc8830 \
 	init.sc8830.rc \
 	init.sc8830.usb.rc \
-	ueventd.sc8830.rc
+	ueventd.sc8830.rc \
+	init.board.rc \
+	init.wifi.rc
+
+# System init.rc files
+PRODUCT_PACKAGES += \
+	at_distributor.rc \
+	chown_service.rc \
+	data.rc \
+	dns.rc \
+	engpc.rc \
+	gpsd.rc \
+	hostapd.rc \
+	kill_phone.rc \
+	macloader.rc \
+	mediacodec.rc \
+	modem_control.rc \
+	modemd.rc \
+	nvitemd.rc \
+	p2p_supplicant.rc \
+	phoneserver.rc \
+	refnotify.rc \
+	set_mac.rc \
+	smd_symlink.rc \
+	swap.rc \
+	wpa_supplicant.rc \
 
 # RIL
 PRODUCT_PACKAGES += \
@@ -124,8 +204,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
 	media_codecs.xml
 
-DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
-
 # Boot animation
 TARGET_SCREEN_HEIGHT := 960
 TARGET_SCREEN_WIDTH := 540
@@ -134,23 +212,18 @@ TARGET_SCREEN_WIDTH := 540
 PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/keylayout/sec_touchscreen.kl:system/usr/keylayout/sec_touchscreen.kl
 
-# sdcardfs
-PRODUCT_PROPERTY_OVERRIDES += \
-	ro.sys.sdcardfs=true
-
 # Offmode charger
 PRODUCT_PACKAGES += \
     charger_res_images \
     cm_charger_res_images
 
-# Low-RAM configs
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.sys.fw.bg_apps_limit=10 \
-    config.disable_atlas=true 
-
-# Set those variables here to overwrite the inherited values.
-PRODUCT_NAME := full_j23g
-PRODUCT_DEVICE := j23g
-PRODUCT_BRAND := samsung
-PRODUCT_MANUFACTURER := samsung
-PRODUCT_MODEL := SM-J200H
+# WiFi
+PRODUCT_PACKAGES += \
+	wpa_supplicant_overlay.conf \
+	p2p_supplicant_overlay.conf \
+	dhcpcd.conf \
+	wpa_supplicant \
+	wpa_supplicant.conf \
+	nvram_net.txt \
+	hostapd \
+	macloader

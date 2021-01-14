@@ -11,6 +11,35 @@ persist.sys.engpc.disable=0
 # System property for storage_preload
 persist.sys.storage_preload=1
 
+# Device props
+keyguard.no_require_sim=true
+ro.com.android.dataroaming=false
+
+# ART device props
+dalvik.vm.dex2oat-flags=--no-watch-dog
+
+# Camera config
+camera.disable_zsl_mode=1
+
+# Languages
+ro.product.locale.language=en
+ro.product.locale.region=GB
+
+# Disable mobile data on first boot
+ro.com.android.mobiledata=false
+
+# enable Google-specific location features,
+# like NetworkLocationProvider and LocationCollector
+ro.com.google.locationfeatures=1
+ro.com.google.networklocation=1
+
+# Low-RAM configs
+ro.sys.fw.bg_apps_limit=10
+config.disable_atlas=true 
+
+# sdcardfs
+ro.sys.sdcardfs=true
+
 # RIL
 persist.modem.w.enable=1
 persist.modem.w.nvp=w

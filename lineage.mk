@@ -1,11 +1,16 @@
-## Specify phone tech before including full_phone	
+# Inherit from AOSP product configuration
+$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
+
+# Dalvik heap config
+$(call inherit-product, frameworks/native/build/phone-hdpi-512-dalvik-heap.mk)
+
+# Inherit some common CM stuff.
 $(call inherit-product, vendor/cm/config/telephony.mk)
+$(call inherit-product, vendor/cm/config/common_full_phone.mk)
 
 # Release name
 PRODUCT_RELEASE_NAME := j23g
-
-# Inherit some common CM stuff.
-$(call inherit-product, vendor/cm/config/common_full_phone.mk)
 
 # Inherit device configuration
 $(call inherit-product, $(LOCAL_PATH)/j23g.mk)
